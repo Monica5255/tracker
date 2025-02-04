@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Daily Streak Tracker</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            margin: 50px;
+            background-color: #FFC5D3;
+        }
+        .container {
+            background: #e2619f;
+            padding: 50px;
+            border-radius: 10px;
+            box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+            display: inline-block;
+        }
+        h1 {
+            color: #333;
+        }
+        #streak {
+            font-size: 2em;
+            font-weight: bold;
+            color: red;
+        }
+        button {
+            margin-top: 20px;
+            padding: 10px 20px;
+            font-size: 16px;
+            cursor: pointer;
+            border: none;
+            border-radius: 5px;
+            background-color: #a94064;
+            color: white;
+        }
+        button:hover {
+            background-color: #915f6d;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>ᡣ𐭩 TRACKER ᡣ𐭩</h1>
+        <p>Current Streak: <span id="streak">0</span> days</p>
+        <p>Last Checked: <span id="lastChecked">Never</span></p>
+        <button onclick="updateStreak()">Mark Today</button>
+    </div>
+
+    <script>
+        // Load streak data from localStorage
+        let streak = localStorage.getItem("streak") ? parseInt(localStorage.getItem("streak")) : 0;
+        let lastChecked = localStorage.getItem("lastChecked") ? new Date(localStorage.getItem("lastChecked")) : null;
+
+        function updateDisplay() {
+            document.getElementById("streak").textContent = streak;
+            document.getElementById("lastChecked").textContent = lastChecked ? lastChecked.toDateString() : "Never";
+        }
+
+        function updateStreak() {
+            let today = new Date();
+            let yesterday = new Date();
+            yesterday.setDate(yesterday.getDate() - 1);
+
+            if (!lastChecked || lastChecked.toDateString() === yesterday.toDateString()) {
+                // If last checked yesterday, increase streak
+                streak++;
+            } else if (lastChecked.toDateString() !== today.toDateString()) {
+                // If last checked was not today or yesterday, reset streak
+                streak = 1;
+            }
+
+            lastChecked = today;
+
+            // Save to localStorage
+            localStorage.setItem("streak", streak);
+            localStorage.setItem("lastChecked", today.toISOString());
+
+            updateDisplay();
+        }
+
+        // Initialize display on page load
+        updateDisplay();
+    </script>
+</body>
+</html>
